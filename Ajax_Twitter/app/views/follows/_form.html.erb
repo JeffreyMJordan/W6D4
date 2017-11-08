@@ -1,0 +1,5 @@
+<% if current_user.follows?(user) %>
+  <form class="button_to follow-toggle" data-userid="<%= user.id %>" data-followed="<%=current_user.follows?(user)%>" method="post" action="http://localhost:3000/users/3/follow"><input type="hidden" name="_method" value="delete"><input type="submit" value="Unfollow"><input type="hidden" name="authenticity_token" value="ro56NraSWVLGUB2CZbY9DtVL+qLvU6CsxPGAoA+OdpzBnNf1ehnx/yZV4Nc0hiUksol5Vc4B5lX08slis/QqKg=="></form>
+<% else %>
+  <form class="button_to follow-toggle" data-userid="<%= user.id %>" data-followed="<%=current_user.follows?(user)%>" method="post" action="http://localhost:3000/users/3/follow"><input type="submit" value="Follow"><input type="hidden" name="authenticity_token" value="DAJGnQtD/BuGGiu3Ekx59jFm+2E7QVhoxYZyxTvp5ZBjEOtex8hUtmYf1uJDfGHcVqR4lhoTHpH1hTsHh5O5Jg=="></form>
+<% end %>
