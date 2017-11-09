@@ -1,10 +1,18 @@
 const APIUtil = {
   followUser: (id) => {
-
+    return $.ajax({
+      type: 'post',
+      dataType: 'json',
+      url: `/users/${id}/follow`,
+    });
   },
 
-  unfollowUser: (id) =>{
-
+  unfollowUser: (id) => {
+    return $.ajax({
+      type: 'delete',
+      dataType: 'json',
+      url: `/users/${id}/follow`,
+    });
   }
 };
 

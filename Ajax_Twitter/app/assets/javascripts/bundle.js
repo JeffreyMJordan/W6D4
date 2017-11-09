@@ -82,7 +82,7 @@ $(() => {
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const APIUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./api_utl\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+const APIUtil = __webpack_require__(2);
 
 class FollowToggle{
   constructor($el){
@@ -90,12 +90,14 @@ class FollowToggle{
     this.userId = $el.data("userid");
     this.followState = $el.data("followed");
     this.el = $el;
-    console.log(this.el);
     this.render();
     this.el.on("click", this.handleClick.bind(this));
   }
 
   render(){
+    $(this.el[0]).prop('disabled', "false");
+    console.log(this.el);
+    debugger;
     if(this.followState===true){
       this.el.html("<button>Unfollow!</button>");
     }else{
@@ -105,35 +107,19 @@ class FollowToggle{
 
   handleClick(event){
     event.preventDefault();
+    $(this.el[0]).prop('disabled', "true");
     console.log(event);
     const context = this;
     if(this.followState===true){
-      $.ajax({
-        type: 'delete',
-        dataType: 'json',
-        url: `/users/${this.userId}/follow`,
-        success(data){
-          context.followState = false;
-          context.render();
-        },
-        error(){
-          console.log("error");
-        },
-      });
+      APIUtil.unfollowUser(this.userId).then(() => {
+        context.followState = false;
+        context.render();
+      }, () => {console.log('Error');});
     }else{
-      $.ajax({
-        type: 'post',
-        dataType: 'json',
-        url: `/users/${this.userId}/follow`,
-        success(data){
-          console.log(context);
-          context.followState = true;
-          context.render();
-        },
-        error(){
-          console.log("error");
-        },
-      });
+      APIUtil.followUser(this.userId).then(() =>{
+        context.followState = true;
+        context.render();
+      }, () => {console.log('Error');});
     }
   }
 
@@ -141,6 +127,31 @@ class FollowToggle{
 }
 
 module.exports = FollowToggle;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+const APIUtil = {
+  followUser: (id) => {
+    return $.ajax({
+      type: 'post',
+      dataType: 'json',
+      url: `/users/${id}/follow`,
+    });
+  },
+
+  unfollowUser: (id) => {
+    return $.ajax({
+      type: 'delete',
+      dataType: 'json',
+      url: `/users/${id}/follow`,
+    });
+  }
+};
+
+module.exports = APIUtil;
 
 
 /***/ })
